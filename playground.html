@@ -56,6 +56,13 @@ sectionid: playground
     #editor {
         height: 500px;
         border: 1px solid #ddd;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        padding: 10px;
+        background: #f5f5f5;
+        overflow: auto;
+        white-space: pre;
+        tab-size: 2;
     }
 
     .templates-section {
@@ -176,7 +183,7 @@ sectionid: playground
                 devcontainer.json Editor
             </div>
             <div class="panel-content">
-                <div id="editor"></div>
+                <textarea id="editor" spellcheck="false"></textarea>
                 <div id="error-message" class="error-message"></div>
             </div>
         </div>
@@ -201,9 +208,6 @@ sectionid: playground
         </div>
     </div>
 </div>
-
-<!-- Monaco Editor -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
 
 <script>
     // Template configurations
@@ -367,27 +371,16 @@ sectionid: playground
     let editor;
     let currentTemplate = 'basic';
 
-    // Initialize Monaco Editor
-    require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } });
-
-    require(['vs/editor/editor.main'], function () {
-        editor = monaco.editor.create(document.getElementById('editor'), {
-            value: JSON.stringify(templates.basic.config, null, 2),
-            language: 'json',
-            theme: 'vs',
-            automaticLayout: true,
-            minimap: { enabled: false },
-            fontSize: 14,
-            lineNumbers: 'on',
-            scrollBeyondLastLine: false,
-            wordWrap: 'on'
-        });
-
+    // Initialize editor
+    document.addEventListener('DOMContentLoaded', function() {
+        editor = document.getElementById('editor');
+        
+        // Set initial content
+        editor.value = JSON.stringify(templates.basic.config, null, 2);
+        
         // Update explanation on content change
-        editor.onDidChangeModelContent(() => {
-            updateExplanation();
-        });
-
+        editor.addEventListener('input', updateExplanation);
+        
         // Initial update
         updateExplanation();
     });
@@ -405,7 +398,7 @@ sectionid: playground
             const template = templates[templateKey];
 
             if (editor && template) {
-                editor.setValue(JSON.stringify(template.config, null, 2));
+                editor.value = JSON.stringify(template.config, null, 2);
                 updateExplanation();
             }
         });
@@ -413,7 +406,7 @@ sectionid: playground
 
     function updateExplanation() {
         try {
-            const content = editor.getValue();
+            const content = editor.value;
             const config = JSON.parse(content);
 
             // Hide error message
