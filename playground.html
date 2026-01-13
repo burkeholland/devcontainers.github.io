@@ -1,0 +1,476 @@
+---
+title: Playground
+layout: default
+sectionid: playground
+---
+
+<style>
+    .playground-container {
+        margin: 20px auto;
+        max-width: 1400px;
+        padding: 0 20px;
+    }
+
+    .playground-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .playground-header h1 {
+        margin-bottom: 10px;
+    }
+
+    .playground-header p {
+        color: #666;
+        font-size: 16px;
+    }
+
+    .playground-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .editor-panel,
+    .preview-panel {
+        background: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .panel-header {
+        background: #2753E3;
+        color: white;
+        padding: 12px 15px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .panel-content {
+        padding: 15px;
+        min-height: 500px;
+    }
+
+    #editor {
+        height: 500px;
+        border: 1px solid #ddd;
+    }
+
+    .templates-section {
+        margin-bottom: 20px;
+    }
+
+    .templates-section h3 {
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    .template-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .template-btn {
+        padding: 8px 16px;
+        border: 1px solid #2753E3;
+        background: white;
+        color: #2753E3;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+    .template-btn:hover {
+        background: #2753E3;
+        color: white;
+    }
+
+    .template-btn.active {
+        background: #2753E3;
+        color: white;
+    }
+
+    .explanation {
+        background: white;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+    }
+
+    .explanation h4 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #2753E3;
+        font-size: 16px;
+    }
+
+    .explanation p {
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .key-features {
+        background: white;
+        padding: 15px;
+        border-radius: 4px;
+    }
+
+    .key-features h4 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #2753E3;
+        font-size: 16px;
+    }
+
+    .key-features ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .key-features li {
+        margin-bottom: 8px;
+        line-height: 1.6;
+    }
+
+    .error-message {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 10px;
+        display: none;
+    }
+
+    @media (max-width: 992px) {
+        .playground-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="playground-container">
+    <div class="playground-header">
+        <h1>Dev Container Playground</h1>
+        <p>Experiment with devcontainer.json configurations and see explanations in real-time</p>
+    </div>
+
+    <div class="templates-section">
+        <h3>Try a Template:</h3>
+        <div class="template-buttons">
+            <button class="template-btn active" data-template="basic">Basic Container</button>
+            <button class="template-btn" data-template="node">Node.js</button>
+            <button class="template-btn" data-template="python">Python</button>
+            <button class="template-btn" data-template="dotnet">C# (.NET)</button>
+            <button class="template-btn" data-template="go">Go</button>
+            <button class="template-btn" data-template="features">With Features</button>
+        </div>
+    </div>
+
+    <div class="playground-layout">
+        <div class="editor-panel">
+            <div class="panel-header">
+                devcontainer.json Editor
+            </div>
+            <div class="panel-content">
+                <div id="editor"></div>
+                <div id="error-message" class="error-message"></div>
+            </div>
+        </div>
+
+        <div class="preview-panel">
+            <div class="panel-header">
+                Configuration Explanation
+            </div>
+            <div class="panel-content">
+                <div id="explanation" class="explanation">
+                    <h4>What does this configuration do?</h4>
+                    <p id="explanation-text">Select properties in the editor to see their explanations here.</p>
+                </div>
+
+                <div id="key-features" class="key-features">
+                    <h4>Key Features in this Configuration:</h4>
+                    <ul id="features-list">
+                        <li>Loading...</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Monaco Editor -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+
+<script>
+    // Template configurations
+    const templates = {
+        basic: {
+            name: "Basic Container",
+            config: {
+                "name": "My Dev Container",
+                "image": "mcr.microsoft.com/devcontainers/base:ubuntu"
+            },
+            description: "This is the simplest dev container configuration. It uses a pre-built base image from Microsoft that includes common development tools and utilities.",
+            features: [
+                "Uses a pre-built Ubuntu base image",
+                "Minimal setup required",
+                "Good starting point for any project"
+            ]
+        },
+        node: {
+            name: "Node.js Development",
+            config: {
+                "name": "Node.js Dev Container",
+                "image": "mcr.microsoft.com/devcontainers/javascript-node:18",
+                "features": {
+                    "ghcr.io/devcontainers/features/node:1": {
+                        "version": "18"
+                    }
+                },
+                "customizations": {
+                    "vscode": {
+                        "extensions": [
+                            "dbaeumer.vscode-eslint",
+                            "esbenp.prettier-vscode"
+                        ]
+                    }
+                },
+                "forwardPorts": [3000],
+                "postCreateCommand": "npm install"
+            },
+            description: "A complete Node.js development environment with ESLint and Prettier extensions pre-installed. Port 3000 is automatically forwarded for web development, and dependencies are installed after container creation.",
+            features: [
+                "Node.js 18 runtime pre-installed",
+                "ESLint and Prettier for code quality",
+                "Port 3000 forwarded for web apps",
+                "Automatic npm install on creation"
+            ]
+        },
+        python: {
+            name: "Python Development",
+            config: {
+                "name": "Python Dev Container",
+                "image": "mcr.microsoft.com/devcontainers/python:3.11",
+                "features": {
+                    "ghcr.io/devcontainers/features/python:1": {
+                        "version": "3.11"
+                    }
+                },
+                "customizations": {
+                    "vscode": {
+                        "extensions": [
+                            "ms-python.python",
+                            "ms-python.vscode-pylance"
+                        ]
+                    }
+                },
+                "postCreateCommand": "pip install -r requirements.txt"
+            },
+            description: "A Python 3.11 development environment with the official Python extension and Pylance for advanced IntelliSense. Automatically installs dependencies from requirements.txt when the container is created.",
+            features: [
+                "Python 3.11 runtime",
+                "Python extension with Pylance support",
+                "Automatic dependency installation",
+                "Ready for data science and web development"
+            ]
+        },
+        dotnet: {
+            name: "C# (.NET) Development",
+            config: {
+                "name": "C# Dev Container",
+                "image": "mcr.microsoft.com/devcontainers/dotnet:7.0",
+                "features": {
+                    "ghcr.io/devcontainers/features/dotnet:1": {
+                        "version": "7.0"
+                    }
+                },
+                "customizations": {
+                    "vscode": {
+                        "extensions": [
+                            "ms-dotnettools.csharp"
+                        ]
+                    }
+                },
+                "forwardPorts": [5000, 5001]
+            },
+            description: "A .NET 7.0 development environment with C# extension for IntelliSense, debugging, and testing. Ports 5000 and 5001 are forwarded for ASP.NET Core applications.",
+            features: [
+                ".NET 7.0 SDK installed",
+                "C# extension for development",
+                "HTTP and HTTPS ports forwarded",
+                "Ready for ASP.NET Core development"
+            ]
+        },
+        go: {
+            name: "Go Development",
+            config: {
+                "name": "Go Dev Container",
+                "image": "mcr.microsoft.com/devcontainers/go:1.21",
+                "features": {
+                    "ghcr.io/devcontainers/features/go:1": {
+                        "version": "1.21"
+                    }
+                },
+                "customizations": {
+                    "vscode": {
+                        "extensions": [
+                            "golang.go"
+                        ],
+                        "settings": {
+                            "go.useLanguageServer": true
+                        }
+                    }
+                },
+                "postCreateCommand": "go mod download"
+            },
+            description: "A Go 1.21 development environment with the official Go extension and language server enabled. Automatically downloads Go modules after container creation.",
+            features: [
+                "Go 1.21 toolchain installed",
+                "Go extension with language server",
+                "Automatic module download",
+                "Optimized for Go development"
+            ]
+        },
+        features: {
+            name: "Container with Features",
+            config: {
+                "name": "Dev Container with Features",
+                "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+                "features": {
+                    "ghcr.io/devcontainers/features/git:1": {},
+                    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+                    "ghcr.io/devcontainers/features/github-cli:1": {}
+                },
+                "customizations": {
+                    "vscode": {
+                        "extensions": [
+                            "eamodio.gitlens"
+                        ]
+                    }
+                }
+            },
+            description: "This configuration demonstrates the power of Dev Container Features - reusable, self-contained units that add tools and runtime capabilities. Here we add Git, Docker-in-Docker, and GitHub CLI to a base image.",
+            features: [
+                "Git for version control",
+                "Docker-in-Docker for container builds",
+                "GitHub CLI for GitHub operations",
+                "GitLens extension for Git insights",
+                "Features are composable and reusable"
+            ]
+        }
+    };
+
+    let editor;
+    let currentTemplate = 'basic';
+
+    // Initialize Monaco Editor
+    require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } });
+
+    require(['vs/editor/editor.main'], function () {
+        editor = monaco.editor.create(document.getElementById('editor'), {
+            value: JSON.stringify(templates.basic.config, null, 2),
+            language: 'json',
+            theme: 'vs',
+            automaticLayout: true,
+            minimap: { enabled: false },
+            fontSize: 14,
+            lineNumbers: 'on',
+            scrollBeyondLastLine: false,
+            wordWrap: 'on'
+        });
+
+        // Update explanation on content change
+        editor.onDidChangeModelContent(() => {
+            updateExplanation();
+        });
+
+        // Initial update
+        updateExplanation();
+    });
+
+    // Template button handlers
+    document.querySelectorAll('.template-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            // Update active state
+            document.querySelectorAll('.template-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            // Load template
+            const templateKey = this.dataset.template;
+            currentTemplate = templateKey;
+            const template = templates[templateKey];
+
+            if (editor && template) {
+                editor.setValue(JSON.stringify(template.config, null, 2));
+                updateExplanation();
+            }
+        });
+    });
+
+    function updateExplanation() {
+        try {
+            const content = editor.getValue();
+            const config = JSON.parse(content);
+
+            // Hide error message
+            document.getElementById('error-message').style.display = 'none';
+
+            // Update description
+            const template = templates[currentTemplate];
+            document.getElementById('explanation-text').textContent = template.description;
+
+            // Extract and display key features from the config
+            const features = [];
+
+            if (config.name) {
+                features.push(`<strong>Name:</strong> ${config.name}`);
+            }
+
+            if (config.image) {
+                features.push(`<strong>Base Image:</strong> Uses ${config.image}`);
+            }
+
+            if (config.build) {
+                features.push(`<strong>Build:</strong> Custom Dockerfile build configuration`);
+            }
+
+            if (config.features && Object.keys(config.features).length > 0) {
+                features.push(`<strong>Features:</strong> ${Object.keys(config.features).length} feature(s) added`);
+            }
+
+            if (config.customizations?.vscode?.extensions) {
+                features.push(`<strong>Extensions:</strong> ${config.customizations.vscode.extensions.length} VS Code extension(s)`);
+            }
+
+            if (config.forwardPorts && config.forwardPorts.length > 0) {
+                features.push(`<strong>Forwarded Ports:</strong> ${config.forwardPorts.join(', ')}`);
+            }
+
+            if (config.postCreateCommand) {
+                features.push(`<strong>Post-Create:</strong> Runs "${config.postCreateCommand}"`);
+            }
+
+            if (config.remoteUser) {
+                features.push(`<strong>User:</strong> Runs as ${config.remoteUser}`);
+            }
+
+            // Display features
+            const featuresList = document.getElementById('features-list');
+            if (features.length > 0) {
+                featuresList.innerHTML = features.map(f => `<li>${f}</li>`).join('');
+            } else {
+                featuresList.innerHTML = '<li>No special features configured</li>';
+            }
+
+        } catch (error) {
+            // Show error message
+            const errorMsg = document.getElementById('error-message');
+            errorMsg.textContent = `JSON Error: ${error.message}`;
+            errorMsg.style.display = 'block';
+        }
+    }
+</script>
