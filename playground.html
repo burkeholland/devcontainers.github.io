@@ -195,7 +195,7 @@ sectionid: playground
             <div class="panel-content">
                 <div id="explanation" class="explanation">
                     <h4>What does this configuration do?</h4>
-                    <p id="explanation-text">Select properties in the editor to see their explanations here.</p>
+                    <p id="explanation-text">The explanation will update as you edit the configuration.</p>
                 </div>
 
                 <div id="key-features" class="key-features">
@@ -447,7 +447,7 @@ sectionid: playground
             }
 
             if (config.forwardPorts && config.forwardPorts.length > 0) {
-                features.push(`<strong>Forwarded Ports:</strong> ${config.forwardPorts.map(escapeHtml).join(', ')}`);
+                features.push(`<strong>Forwarded Ports:</strong> ${config.forwardPorts.map(port => escapeHtml(String(port))).join(', ')}`);
             }
 
             if (config.postCreateCommand) {
