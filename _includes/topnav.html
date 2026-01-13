@@ -29,6 +29,9 @@
                 <li {% if page.sectionid=='guides' %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
                     <a class="nav-link" href='{{ "/guides" | prepend: site.baseurl }}'>Guides</a>
                 </li>
+                <li {% if page.sectionid=='glossary' %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
+                    <a class="nav-link" href='{{ "/glossary" | prepend: site.baseurl }}'>Glossary</a>
+                </li>
                 <li {% if page.sectionid=='features' %} class="nav-item active" {% else %} class="nav-item" {% endif %}>
                     <a class="nav-link" href='{{ "/features" | prepend: site.baseurl }}'>Available Features</a>
                 </li>
