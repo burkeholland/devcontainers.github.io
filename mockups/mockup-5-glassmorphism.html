@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup 5: Glassmorphism - Development Containers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: 100px 100px;
+            z-index: 0;
+        }
+        
+        /* Glass Container */
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Navigation */
+        nav {
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+            margin: 2rem 5% 0;
+            border-radius: 1.5rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 6rem 5%;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .hero-glass {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 5rem 3rem;
+            border-radius: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: white;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            letter-spacing: -0.03em;
+        }
+        
+        .hero .subtitle {
+            font-size: 1.75rem;
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            font-weight: 400;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 1.25rem 3rem;
+            border-radius: 1rem;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s;
+            display: inline-block;
+            font-size: 1.125rem;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+        
+        /* Features Grid */
+        .features {
+            padding: 4rem 5%;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            padding: 3rem 2.5rem;
+            border-radius: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.1));
+        }
+        
+        .feature-card h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Info Section */
+        .info-section {
+            padding: 4rem 5%;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .info-glass {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 3rem;
+            border-radius: 2rem;
+            text-align: center;
+        }
+        
+        .info-glass h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-glass p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Quick Links */
+        .quick-links {
+            padding: 4rem 5% 6rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .links-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .link-card {
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .link-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .link-card h4 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .link-card p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 10;
+            margin: 0 5% 2rem;
+            border-radius: 1.5rem;
+        }
+        
+        .mockup-label {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="mockup-label">MOCKUP 5: GLASSMORPHISM</div>
+    
+    <nav class="glass">
+        <div class="logo">Dev Containers</div>
+        <ul class="nav-links">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#spec">Spec</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#templates">Templates</a></li>
+        </ul>
+    </nav>
+    
+    <section class="hero">
+        <div class="hero-glass glass">
+            <h1>Development<br>Containers</h1>
+            <p class="subtitle">An open specification for enriching containers with development specific content and settings</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary">Get Started</a>
+                <a href="#" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features">
+        <div class="features-container">
+            <div class="features-grid">
+                <div class="feature-card glass">
+                    <span class="feature-icon">💡</span>
+                    <h3>Simple Setup</h3>
+                    <p>Configure your entire development environment with a single JSON file.</p>
+                </div>
+                <div class="feature-card glass">
+                    <span class="feature-icon">🔒</span>
+                    <h3>Consistent</h3>
+                    <p>Ensure all team members work in identical environments across platforms.</p>
+                </div>
+                <div class="feature-card glass">
+                    <span class="feature-icon">⚡</span>
+                    <h3>Powerful</h3>
+                    <p>Access features, templates, and integrations from the community.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="info-section">
+        <div class="info-glass glass">
+            <h2>What are Dev Containers?</h2>
+            <p>A development container allows you to use a container as a full-featured development environment. It can be used to run an application, to separate tools, libraries, or runtimes needed for working with a codebase, and to aid in continuous integration and testing.</p>
+        </div>
+    </section>
+    
+    <section class="quick-links">
+        <div class="links-container">
+            <a href="#" class="link-card glass">
+                <h4>📚 Documentation</h4>
+                <p>Read the full specification</p>
+            </a>
+            <a href="#" class="link-card glass">
+                <h4>🎨 Templates</h4>
+                <p>Browse templates</p>
+            </a>
+            <a href="#" class="link-card glass">
+                <h4>🔧 Features</h4>
+                <p>Explore features</p>
+            </a>
+            <a href="#" class="link-card glass">
+                <h4>🛠️ Tools</h4>
+                <p>Supporting tools</p>
+            </a>
+        </div>
+    </section>
+    
+    <footer class="glass">
+        <p>&copy; 2024 Development Containers. Open Source Specification.</p>
+    </footer>
+</body>
+</html>

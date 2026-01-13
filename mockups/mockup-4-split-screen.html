@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mockup 4: Split Screen - Development Containers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+        }
+        
+        /* Navigation */
+        nav {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            background: white;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #2b6cb0;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #2b6cb0;
+        }
+        
+        /* Split Hero Section */
+        .split-hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+        
+        .hero-left {
+            background: #2b6cb0;
+            padding: 6rem 5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+        }
+        
+        .hero-left h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 2rem;
+            letter-spacing: -0.03em;
+        }
+        
+        .hero-left p {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            opacity: 0.95;
+            max-width: 500px;
+        }
+        
+        .hero-left .btn {
+            display: inline-block;
+            padding: 1.25rem 2.5rem;
+            background: white;
+            color: #2b6cb0;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+            align-self: flex-start;
+        }
+        
+        .hero-left .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hero-right {
+            background: #f7fafc;
+            padding: 6rem 5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .code-preview {
+            background: #1a202c;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+        
+        .code-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+        
+        .code-content {
+            color: #a0aec0;
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+        
+        .code-content .key { color: #63b3ed; }
+        .code-content .string { color: #68d391; }
+        .code-content .value { color: #fbd38d; }
+        
+        /* Features Grid */
+        .features-section {
+            padding: 6rem 5%;
+            background: white;
+        }
+        
+        .features-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .features-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 4rem;
+            text-align: center;
+            color: #1a202c;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+        
+        .feature-item {
+            text-align: center;
+        }
+        
+        .feature-icon-wrapper {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 3rem;
+            box-shadow: 0 10px 30px rgba(43, 108, 176, 0.2);
+        }
+        
+        .feature-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+        
+        .feature-item p {
+            color: #718096;
+            line-height: 1.7;
+        }
+        
+        /* Call to Action */
+        .cta-section {
+            background: linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%);
+            padding: 6rem 5%;
+            text-align: center;
+            color: white;
+        }
+        
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .cta-content h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 900;
+        }
+        
+        .cta-content p {
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .btn-outline {
+            display: inline-block;
+            padding: 1.25rem 2.5rem;
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-outline:hover {
+            background: white;
+            color: #2b6cb0;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            background: #1a202c;
+            color: white;
+            text-align: center;
+        }
+        
+        .mockup-label {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: #2b6cb0;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            z-index: 1000;
+        }
+        
+        @media (max-width: 968px) {
+            .split-hero {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mockup-label">MOCKUP 4: SPLIT SCREEN</div>
+    
+    <nav>
+        <div class="logo">DEVCONTAINERS</div>
+        <ul class="nav-links">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#spec">Specification</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#docs">Docs</a></li>
+        </ul>
+    </nav>
+    
+    <section class="split-hero">
+        <div class="hero-left">
+            <h1>Development<br>Containers</h1>
+            <p>An open specification for enriching containers with development content and settings.</p>
+            <a href="#" class="btn">Get Started →</a>
+        </div>
+        <div class="hero-right">
+            <div class="code-preview">
+                <div class="code-header">
+                    <div class="code-dot dot-red"></div>
+                    <div class="code-dot dot-yellow"></div>
+                    <div class="code-dot dot-green"></div>
+                </div>
+                <div class="code-content">
+<span class="key">{</span><br>
+  <span class="key">"name"</span>: <span class="string">"My Project"</span>,<br>
+  <span class="key">"image"</span>: <span class="string">"node:18"</span>,<br>
+  <span class="key">"features"</span>: <span class="key">{</span><br>
+    <span class="string">"github-cli"</span>: <span class="value">"latest"</span><br>
+  <span class="key">}</span><br>
+<span class="key">}</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features-section">
+        <div class="features-wrapper">
+            <h2 class="features-title">Why Choose Dev Containers?</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper">🚀</div>
+                    <h3>Fast Setup</h3>
+                    <p>Get your development environment running in seconds with pre-configured containers.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper">🔄</div>
+                    <h3>Reproducible</h3>
+                    <p>Ensure everyone on your team has the same development environment.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper">🌍</div>
+                    <h3>Cross-Platform</h3>
+                    <p>Works seamlessly across Windows, Mac, Linux, and cloud environments.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon-wrapper">🔧</div>
+                    <h3>Customizable</h3>
+                    <p>Extend and customize with features, templates, and custom configurations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Ready to Transform Your Workflow?</h2>
+            <p>Join thousands of developers using dev containers</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn-outline">View Documentation</a>
+                <a href="#" class="btn-outline">Browse Templates</a>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p>&copy; 2024 Development Containers. Open Source Specification.</p>
+    </footer>
+</body>
+</html>
