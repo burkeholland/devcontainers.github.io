@@ -418,9 +418,9 @@ sectionid: playground
 
             // Helper function to escape HTML
             function escapeHtml(text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
+                return String(text).replace(/[&<>"']/g, function(m) {
+                    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m];
+                });
             }
 
             // Extract and display key features from the config
@@ -447,7 +447,8 @@ sectionid: playground
             }
 
             if (config.forwardPorts && config.forwardPorts.length > 0) {
-                features.push(`<strong>Forwarded Ports:</strong> ${config.forwardPorts.map(port => escapeHtml(String(port))).join(', ')}`);
+                const validPorts = config.forwardPorts.filter(port => typeof port === 'number' || typeof port === 'string');
+                features.push(`<strong>Forwarded Ports:</strong> ${validPorts.map(port => escapeHtml(String(port))).join(', ')}`);
             }
 
             if (config.postCreateCommand) {
@@ -459,6 +460,8 @@ sectionid: playground
             }
 
             // Display features
+            // Note: innerHTML is safe here because all user content is escaped via escapeHtml()
+            // and the HTML structure (<strong> tags) is constructed by us, not from user input
             const featuresList = document.getElementById('features-list');
             if (features.length > 0) {
                 featuresList.innerHTML = features.map(f => `<li>${f}</li>`).join('');
