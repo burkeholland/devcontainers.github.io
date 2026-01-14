@@ -404,6 +404,15 @@ sectionid: playground
         });
     });
 
+    // HTML escape map for security
+    const HTML_ESCAPE_MAP = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    };
+
     function updateExplanation() {
         try {
             const content = editor.value;
@@ -419,8 +428,14 @@ sectionid: playground
             // Helper function to escape HTML
             function escapeHtml(text) {
                 return String(text).replace(/[&<>"']/g, function(m) {
-                    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m];
+                    return HTML_ESCAPE_MAP[m];
                 });
+            }
+
+            // Helper function to validate and format port numbers
+            function isValidPort(port) {
+                const num = typeof port === 'number' ? port : parseInt(port, 10);
+                return !isNaN(num) && num >= 1 && num <= 65535;
             }
 
             // Extract and display key features from the config
@@ -447,8 +462,10 @@ sectionid: playground
             }
 
             if (config.forwardPorts && config.forwardPorts.length > 0) {
-                const validPorts = config.forwardPorts.filter(port => typeof port === 'number' || typeof port === 'string');
-                features.push(`<strong>Forwarded Ports:</strong> ${validPorts.map(port => escapeHtml(String(port))).join(', ')}`);
+                const validPorts = config.forwardPorts.filter(isValidPort);
+                if (validPorts.length > 0) {
+                    features.push(`<strong>Forwarded Ports:</strong> ${validPorts.map(port => escapeHtml(String(port))).join(', ')}`);
+                }
             }
 
             if (config.postCreateCommand) {
