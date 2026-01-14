@@ -63,6 +63,7 @@ sectionid: playground
         overflow: auto;
         white-space: pre;
         tab-size: 2;
+        resize: vertical;
     }
 
     .templates-section {
@@ -397,9 +398,8 @@ sectionid: playground
     // Debounce helper function for performance
     function debounce(func, wait) {
         let timeout;
-        return function executedFunction() {
+        return function executedFunction(...args) {
             const context = this;
-            const args = arguments;
             clearTimeout(timeout);
             timeout = setTimeout(function() {
                 func.apply(context, args);
@@ -436,41 +436,41 @@ sectionid: playground
             const features = [];
 
             if (config.name) {
-                features.push(`<strong>Name:</strong> ${escapeHtml(config.name)}`);
+                features.push({label: 'Name:', value: config.name});
             }
 
             if (config.image) {
-                features.push(`<strong>Base Image:</strong> Uses ${escapeHtml(config.image)}`);
+                features.push({label: 'Base Image:', value: `Uses ${config.image}`});
             }
 
             if (config.build) {
-                features.push(`<strong>Build:</strong> Custom Dockerfile build configuration`);
+                features.push({label: 'Build:', value: 'Custom Dockerfile build configuration'});
             }
 
             if (config.features && Object.keys(config.features).length > 0) {
-                features.push(`<strong>Features:</strong> ${Object.keys(config.features).length} feature(s) added`);
+                features.push({label: 'Features:', value: `${Object.keys(config.features).length} feature(s) added`});
             }
 
             if (config.customizations && config.customizations.vscode && config.customizations.vscode.extensions) {
                 const extensions = config.customizations.vscode.extensions;
                 if (Array.isArray(extensions) && extensions.length > 0) {
-                    features.push(`<strong>Extensions:</strong> ${extensions.length} VS Code extension(s)`);
+                    features.push({label: 'Extensions:', value: `${extensions.length} VS Code extension(s)`});
                 }
             }
 
             if (config.forwardPorts && Array.isArray(config.forwardPorts) && config.forwardPorts.length > 0) {
                 const validPorts = config.forwardPorts.filter(isValidPort);
                 if (validPorts.length > 0) {
-                    features.push(`<strong>Forwarded Ports:</strong> ${validPorts.map(port => escapeHtml(String(port))).join(', ')}`);
+                    features.push({label: 'Forwarded Ports:', value: validPorts.map(String).join(', ')});
                 }
             }
 
             if (config.postCreateCommand) {
-                features.push(`<strong>Post-Create:</strong> Runs "${escapeHtml(config.postCreateCommand)}"`);
+                features.push({label: 'Post-Create:', value: `Runs "${config.postCreateCommand}"`});
             }
 
             if (config.remoteUser) {
-                features.push(`<strong>User:</strong> Runs as ${escapeHtml(config.remoteUser)}`);
+                features.push({label: 'User:', value: `Runs as ${config.remoteUser}`});
             }
 
             // Display features using DOM methods for maximum security
@@ -481,7 +481,10 @@ sectionid: playground
             if (features.length > 0) {
                 features.forEach(feature => {
                     const li = document.createElement('li');
-                    li.innerHTML = feature; // Safe because feature strings are constructed by us with escaped user content
+                    const strong = document.createElement('strong');
+                    strong.textContent = feature.label;
+                    li.appendChild(strong);
+                    li.appendChild(document.createTextNode(' ' + feature.value));
                     featuresList.appendChild(li);
                 });
             } else {
