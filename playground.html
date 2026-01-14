@@ -386,15 +386,6 @@ sectionid: playground
         });
     });
 
-    // HTML escape map for security
-    const HTML_ESCAPE_MAP = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-    };
-
     // Debounce helper function for performance
     function debounce(func, wait) {
         let timeout;
@@ -418,13 +409,6 @@ sectionid: playground
             // Update description
             const template = templates[currentTemplate];
             document.getElementById('explanation-text').textContent = template.description;
-
-            // Helper function to escape HTML
-            function escapeHtml(text) {
-                return String(text).replace(/[&<>"']/g, function(m) {
-                    return HTML_ESCAPE_MAP[m];
-                });
-            }
 
             // Helper function to validate and format port numbers
             function isValidPort(port) {
@@ -475,8 +459,8 @@ sectionid: playground
 
             // Display features using DOM methods for maximum security
             const featuresList = document.getElementById('features-list');
-            // Clear existing content
-            featuresList.innerHTML = '';
+            // Clear existing content using DOM method
+            featuresList.replaceChildren();
             
             if (features.length > 0) {
                 features.forEach(feature => {
