@@ -183,7 +183,7 @@ sectionid: playground
                 devcontainer.json Editor
             </div>
             <div class="panel-content">
-                <textarea id="editor" spellcheck="false" aria-label="devcontainer.json configuration editor"></textarea>
+                <textarea id="editor" spellcheck="false" aria-label="devcontainer.json configuration editor" aria-describedby="explanation-text"></textarea>
                 <div id="error-message" class="error-message"></div>
             </div>
         </div>
@@ -358,8 +358,9 @@ sectionid: playground
         // Set initial content
         editor.value = JSON.stringify(templates.basic.config, null, 2);
         
-        // Update explanation on content change
-        editor.addEventListener('input', updateExplanation);
+        // Update explanation on content change with debouncing for performance
+        const debouncedUpdate = debounce(updateExplanation, 300);
+        editor.addEventListener('input', debouncedUpdate);
         
         // Initial update
         updateExplanation();
@@ -392,6 +393,19 @@ sectionid: playground
         '"': '&quot;',
         "'": '&#39;'
     };
+
+    // Debounce helper function for performance
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction() {
+            const context = this;
+            const args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                func.apply(context, args);
+            }, wait);
+        };
+    }
 
     function updateExplanation() {
         try {
@@ -459,14 +473,21 @@ sectionid: playground
                 features.push(`<strong>User:</strong> Runs as ${escapeHtml(config.remoteUser)}`);
             }
 
-            // Display features
-            // Note: innerHTML is safe here because all user content is escaped via escapeHtml()
-            // and the HTML structure (<strong> tags) is constructed by us, not from user input
+            // Display features using DOM methods for maximum security
             const featuresList = document.getElementById('features-list');
+            // Clear existing content
+            featuresList.innerHTML = '';
+            
             if (features.length > 0) {
-                featuresList.innerHTML = features.map(f => `<li>${f}</li>`).join('');
+                features.forEach(feature => {
+                    const li = document.createElement('li');
+                    li.innerHTML = feature; // Safe because feature strings are constructed by us with escaped user content
+                    featuresList.appendChild(li);
+                });
             } else {
-                featuresList.innerHTML = '<li>No special features configured</li>';
+                const li = document.createElement('li');
+                li.textContent = 'No special features configured';
+                featuresList.appendChild(li);
             }
 
         } catch (error) {
