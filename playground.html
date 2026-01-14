@@ -183,7 +183,7 @@ sectionid: playground
                 devcontainer.json Editor
             </div>
             <div class="panel-content">
-                <textarea id="editor" spellcheck="false"></textarea>
+                <textarea id="editor" spellcheck="false" aria-label="devcontainer.json configuration editor"></textarea>
                 <div id="error-message" class="error-message"></div>
             </div>
         </div>
@@ -458,10 +458,13 @@ sectionid: playground
             }
 
             if (config.customizations && config.customizations.vscode && config.customizations.vscode.extensions) {
-                features.push(`<strong>Extensions:</strong> ${config.customizations.vscode.extensions.length} VS Code extension(s)`);
+                const extensions = config.customizations.vscode.extensions;
+                if (Array.isArray(extensions) && extensions.length > 0) {
+                    features.push(`<strong>Extensions:</strong> ${extensions.length} VS Code extension(s)`);
+                }
             }
 
-            if (config.forwardPorts && config.forwardPorts.length > 0) {
+            if (config.forwardPorts && Array.isArray(config.forwardPorts) && config.forwardPorts.length > 0) {
                 const validPorts = config.forwardPorts.filter(isValidPort);
                 if (validPorts.length > 0) {
                     features.push(`<strong>Forwarded Ports:</strong> ${validPorts.map(port => escapeHtml(String(port))).join(', ')}`);
